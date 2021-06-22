@@ -1,0 +1,86 @@
+<template>
+    <div id="filter-meeting" class="container">
+        <div class="d-flex">
+            <h3 class="title">Filtrar reuniões</h3>
+            <div class="ml-auto box-checkboxs">
+                <!-- PEGAR APENAS REUNIÕES NOVAS -->
+                <label class="label-checkboxs" for="new-meetings"><input type="checkbox" v-model="filter.filteringNewMeetings" id="new-meetings" /> Apenas reuniões novas</label>
+                <!-- PEGAR APENAS REUNIÕES QUE AINDA NÃO FORAM REALIZADAS  -->
+                <label class="label-checkboxs" for="future-meetings"><input type="checkbox" v-model="filter.futureMeetings" id="future-meetings" /> Apenas reuniões futuras</label>
+            </div>
+        </div>
+        <form class="form" v-on:submit.prevent="update()">
+            <div class="row form-row">
+                <!-- NOME -->
+                <div class="form-group col-12 col-md">
+                    <label>Nome</label>
+                    <input type="text" class="form-control" v-model="filter.name" />
+                </div>
+                <!-- E-MAIL -->
+                <div class="form-group col-12 col-md">
+                    <label>E-mail</label>
+                    <input type="email" class="form-control" v-model="filter.email" />
+                </div>
+                <!-- ASSUNTO -->
+                <div class="form-group col-12 col-md">
+                    <label>Pauta</label>
+                    <input type="text" class="form-control" v-model="filter.subject" />
+                </div>
+                <!-- DATA -->
+                <div class="form-group col-12 col-sm" style="max-width: 180px !important;">
+                    <label>Data</label>
+                    <input type="date" class="form-control" v-model="filter.date" />
+                </div>
+                <!-- INÍCIO -->
+                <div class="form-group col-12 col-sm" style="max-width: 75px !important;">
+                    <label>Inicial</label>
+                    <the-mask type="text" masked :mask="'##:##'" class="form-control" v-model="filter.start" placeholder="00:00"></the-mask>
+                </div>
+                <!-- FINAL -->
+                <div class="form-group col-12 col-sm" style="max-width: 75px !important;">
+                    <label>Final</label>
+                    <the-mask type="text" masked :mask="'##:##'" class="form-control" v-model="filter.end" placeholder="00:00"></the-mask>
+                </div>
+                <button class="btn btn-send btn-icon ml-auto d-block" @click="update()"><i class="fa fa-search" aria-hidden="true"></i></button>
+            </div>
+        </form>
+    </div>
+</template>
+
+<script>
+
+import { TheMask } from 'vue-the-mask';
+
+export default {
+    name: 'FilterMeetings',
+    components:{
+        TheMask
+    },
+    props:['filter'],
+    methods:{
+        // FECHAR MODAL
+        update() {
+            this.$emit('update');
+        },
+    }
+}
+</script>
+
+<style scoped>
+
+#filter-meeting .form{
+    box-shadow: 2px 2px 12px -2px #b5b5b5;
+    border-radius: .25rem;
+    padding: 10px 30px 20px 30px;
+}
+#filter-meeting .form-row{align-items: flex-end;}
+#filter-meeting .form-group{margin-bottom: 0px !important;}
+
+.box-checkboxs label{
+    font-family: rubik,Sans-serif;
+    cursor: pointer;
+    margin-left: 10px;
+    font-size: 14px;
+}
+
+</style>
