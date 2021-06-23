@@ -2,7 +2,7 @@
 
 Desafio técnico Full Stack.
 
-O objetivo é desenvolver um sistema para agendamento de reuniões. Deve permitir cadastrar reuniões, aprovar, listar, exibir em um calendário, editar e etc.
+Sistema de agendamento de reuniões. Permite cadastrar reuniões, aprovar, listar, exibir em um calendário, editar e remover.
 
 O projeto inclui:
 
