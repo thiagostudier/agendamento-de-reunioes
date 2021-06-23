@@ -131,6 +131,8 @@ class MeetingController extends Controller
         $meeting = Meeting::findOrFail($id);
         // PEGAR OS DADOS
         $data = $request->all();
+        // PEGAR DIA DA SEMANA
+        $data['week'] = date("D", strtotime($data['date']));
         // VALIDAR CAMPOS
         $validation = Validator::make($data, [
             'name' => 'required|string|max:255|min:1',
@@ -141,6 +143,7 @@ class MeetingController extends Controller
             'end' => 'required|date_format:H:i|after_or_equal:08:00|before_or_equal:18:00',
             'status' => 'boolean',
             'new' => 'boolean',
+            'week' => 'required|in:Mon,Tue,Wed,Thu,Fri',
         ]);
         // SE HOUVER ERROS, RETORNAR PARA O USUÁRIO
         if($validation->fails()){

@@ -44,7 +44,7 @@ class Meeting extends Model
             // FORMULAR HORÁRIO FINAL
             $end = date("Y-m-d H:i:s", strtotime($date." ".$end));
             // VALIDAR SE AS DUAS REUNIÕES NÃO CONVERGEM
-            if(($new_start >= $start && $new_start < $end) || ($new_end > $start && $new_end < $end)){
+            if( ($new_start >= $start && $new_start < $end) || ($new_end > $start && $new_start < $end) ){
                 $validate = false;
             }
         }
