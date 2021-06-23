@@ -2,7 +2,7 @@
 
 Desafio técnico Full Stack.
 
-O objetivo é desenvolver um sistema para agendamento de reuniões.
+O objetivo é desenvolver um sistema para agendamento de reuniões. Deve permitir cadastrar reuniões, aprovar, listar, exibir em um calendário, editar e etc.
 
 O projeto inclui:
 
@@ -17,16 +17,14 @@ O projeto inclui:
 
 ### Instalar pacotes do node e subir ambiente
 
-> _Obs: Necessário ter npm instalado
-
 #### Backend
 
 - `cd backend`
 - `composer install`
 
-Configurar variáveis de ambiente (arquivo ".env" -> DATABASE e MAIL)
+> _Obs: Configurar variáveis de ambiente (arquivo ".env" -> DATABASE e MAIL)
 
-- `php artisan migrate` - Criar banco de dados
+- `php artisan migrate`
 - `php artisan serve`
 
 O Serviço rodará na porta 8000: localhost:8000/
