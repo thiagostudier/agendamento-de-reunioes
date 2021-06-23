@@ -25,9 +25,15 @@ O projeto inclui:
 > _Obs: Configurar variáveis de ambiente (arquivo ".env" -> DATABASE e MAIL)
 
 - `php artisan migrate`
+- `php artisan db:seed`
 - `php artisan serve`
 
 O Serviço rodará na porta 8000: localhost:8000/
+
+Usuário e senha do seed: 
+
+- `jorge@piperun.com`
+- `password`
 
 #### Frontend
 
