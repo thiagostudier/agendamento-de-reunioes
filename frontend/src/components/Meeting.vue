@@ -8,6 +8,9 @@
             <button v-if="!status" v-on:click="updateStatus(meeting.id, true)"><i class="icon-accept fa fa-check" aria-hidden="true"></i> Aceitar</button>
             <button v-if="status" v-on:click="updateStatus(meeting.id, false)"><i class="icon-refuse fa fa-times" aria-hidden="true"></i> Recusar</button>
         </div>
+        <div v-else id="status-meeting">
+            <button style="pointer-events: none" v-if="status">Reunião aceita</button>
+        </div>
         <!-- BOTÃO DE EDITAR -->
         <div v-if="auth" id="edit">
             <router-link :to="'/update-meeting/'+meeting.id"><i class="icon-edit fa fa-pencil" aria-hidden="true"></i> Editar</router-link>
@@ -32,24 +35,31 @@ export default {
             new_meeting: this.meeting.new
         }
     },
-    created(){
-        console.log(this.auth);
-    },
     methods: {
         updateStatus(id, status){
             // MÉTODO AXIOS - ATUALIZAR REUNIÃO
             api.put(`meetings-accept/`+id, 
             {status: status})
             .then(response => {
-                // NOTIFICAÇÃO
-                this.$notify({
-                    closeOnClick: true,
-                    type: 'success',
-                    text: 'Ação realizada com sucesso!',
-                    position: 'top right'
-                });
-                this.status = status;
-                this.new_meeting = false;
+                if(response.data.errors){
+                    // NOTIFICAÇÃO
+                    this.$notify({
+                        closeOnClick: true,
+                        type: 'error',
+                        text: response.data.errors,
+                        position: 'top right'
+                    });
+                }else{
+                    // NOTIFICAÇÃO
+                    this.$notify({
+                        closeOnClick: true,
+                        type: 'success',
+                        text: 'Ação realizada com sucesso!',
+                        position: 'top right'
+                    });
+                    this.status = status;
+                    this.new_meeting = false;
+                }
             })
             .catch(e => {
                 // NOTIFICAÇÃO

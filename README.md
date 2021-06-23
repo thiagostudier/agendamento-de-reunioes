@@ -20,3 +20,6 @@ php artisan make:model Meeting
 composer require laravel/ui
 php artisan ui vue --auth
 npm install
+
+php artisan make:notification NewMeetingNotification
+php artisan vendor:publish --tag=laravel-notifications

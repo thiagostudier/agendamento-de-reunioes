@@ -57,7 +57,7 @@
                     console.log(response);
                     if(response.data.token){
                         //GUARDAR SESSÃO DO USUÁRIO
-                        localStorage.setItem('user', JSON.stringify(response.data)); 
+                        localStorage.setItem('auth', JSON.stringify(response.data)); 
                         // NOTIFICAÇÃO
                         this.$notify({
                             closeOnClick: true,

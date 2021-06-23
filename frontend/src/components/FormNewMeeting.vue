@@ -103,7 +103,7 @@ export default {
                     this.$notify({
                         closeOnClick: true,
                         type: 'success',
-                        text: 'Reunião cadastrada com sucesso!',
+                        text: 'A solicitação de reunião foi enviada com sucesso!',
                         position: 'top right'
                     });
                     // LIMPAR DADOS

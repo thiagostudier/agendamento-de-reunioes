@@ -12,6 +12,11 @@
             <div v-if="!meetings.length">
                 <p>Nenhuma reunião encontrada</p>
             </div>
+            <br />
+            <hr />
+            <br />
+            <!-- AGENDA -->
+            <schedule></schedule>
         </div>
     </div>
 </template>
@@ -21,18 +26,20 @@
     import HeaderVue from '@/components/HeaderVue';
     import FilterMeetings from '@/components/FilterMeetings';
     import Meeting from '@/components/Meeting';
+    import Schedule from '@/components/Schedule.vue';
     import { api } from '@/services/api.ts';
-    
+
     export default {
         name: 'Dashboard',
         components: {
             HeaderVue,
             FilterMeetings,
-            Meeting
+            Meeting,
+            Schedule
         },
         data(){
             return{
-                auth: false,
+                auth: JSON.parse(localStorage.getItem('auth')),
                 meetings: [],
                 filter: {
                     name: null,
@@ -43,10 +50,12 @@
                     end: null,
                     futureMeetings: null,
                     filteringNewMeetings: null,
+                    filteringMeetingsAccept: null,
                 },
             }
         },
         created(){
+            // PEGAR DADOS DOS FILTROS EM LOCALHOST
             if(localStorage.getItem('filtering')){
                 this.filter.name = JSON.parse(localStorage.getItem('filtering')).name ? JSON.parse(localStorage.getItem('filtering')).name : null;
                 this.filter.email = JSON.parse(localStorage.getItem('filtering')).email ? JSON.parse(localStorage.getItem('filtering')).email : null;
@@ -56,15 +65,16 @@
                 this.filter.end = JSON.parse(localStorage.getItem('filtering')).end ? JSON.parse(localStorage.getItem('filtering')).end : null;
                 this.filter.futureMeetings = JSON.parse(localStorage.getItem('filtering')).futureMeetings ? JSON.parse(localStorage.getItem('filtering')).futureMeetings : null;
                 this.filter.filteringNewMeetings = JSON.parse(localStorage.getItem('filtering')).filteringNewMeetings ? JSON.parse(localStorage.getItem('filtering')).filteringNewMeetings : null;
+                this.filter.filteringMeetingsAccept = JSON.parse(localStorage.getItem('filtering')).filteringMeetingsAccept ? JSON.parse(localStorage.getItem('filtering')).filteringMeetingsAccept : null;
             }
+            // FILTRAR DADOS
             this.filterMeetings();
-            this.getUser();
         },
         methods: {
             filterMeetings(){
                 // MÉTODO AXIOS - PEGAR REUNIÕES
                 api.post(`filter`, 
-                {name: this.filter.name, email: this.filter.email, subject: this.filter.subject, date: this.filter.date, start: this.filter.start, end: this.filter.end, futureMeetings: this.filter.futureMeetings, filteringNewMeetings: this.filter.filteringNewMeetings})
+                {name: this.filter.name, email: this.filter.email, subject: this.filter.subject, date: this.filter.date, start: this.filter.start, end: this.filter.end, futureMeetings: this.filter.futureMeetings, filteringNewMeetings: this.filter.filteringNewMeetings, filteringMeetingsAccept: this.filter.filteringMeetingsAccept})
                 .then(response => {
                     this.meetings = response.data;
                     localStorage.setItem('filtering', JSON.stringify(this.filter));
@@ -79,21 +89,6 @@
                     });
                 });
             },
-            getUser(){
-                var user = JSON.parse(localStorage.getItem('user'));
-                api.post(`get-me`, {}, 
-                {headers: {"Authorization":"Bearer "+user.token}},)
-                .then(response => {
-                    console.log(response);
-                    if(response){
-                        this.auth = true;
-                    }else{
-                        this.auth = false;
-                    }
-                })
-                .catch(e => {
-                })
-            }
         },
     }
 

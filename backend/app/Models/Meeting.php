@@ -21,4 +21,34 @@ class Meeting extends Model
         'created_at',
         'updated_at',
     ];
+
+    public static function validateDates($data){
+        // FORMULAR A DATA E OS HORÁRIOS
+        $new_date = date("Y-m-d", strtotime($data['date']));
+        $new_start = date("H:i", strtotime($data['start']));
+        $new_end = date("H:i", strtotime($data['end']));
+        // FORMULAR A DATA E OS HORÁRIOS - TIMESTAMP
+        $new_start = date("Y-m-d H:i:s", strtotime($new_date." ".$new_start));
+        $new_end = date("Y-m-d H:i:s", strtotime($new_date." ".$new_end));
+        // VALIDAR HORÁRIO DA REUNIÃO - PEGAR REUNIÕES ACEITAS
+        $meetings = Meeting::where('status', true)->get();
+        // VARIAVEL DE RETORNO
+        $validate = true;
+        foreach($meetings as $meeting){
+            // PEGAR DATAS E HORÁRIO
+            $date = date("Y-m-d", strtotime($meeting->date));
+            $start = date("H:i", strtotime($meeting->start));
+            $end = date("H:i", strtotime($meeting->end));
+            // FORMULAR HORÁRIO INICIAL
+            $start = date("Y-m-d H:i:s", strtotime($date." ".$start));
+            // FORMULAR HORÁRIO FINAL
+            $end = date("Y-m-d H:i:s", strtotime($date." ".$end));
+            // VALIDAR SE AS DUAS REUNIÕES NÃO CONVERGEM
+            if(($new_start >= $start && $new_start < $end) || ($new_end > $start && $new_end < $end)){
+                $validate = false;
+            }
+        }
+
+        return $validate;
+    }
 }

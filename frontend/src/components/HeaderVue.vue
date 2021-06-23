@@ -4,10 +4,10 @@
       <img src="/static/images/piperun-logo.png" /> 
       <div class="buttons-header">
         <router-link class="btn btn-login" to="/home">Tela Inicial</router-link>
-        <span v-if="auth.name">olá, {{auth.name}}</span>
-        <router-link v-if="!auth.token" class="btn btn-color btn-login" to="/login">Login</router-link>
-        <router-link v-if="auth.token && this.$route.name != 'Dashboard'" class="btn btn-color btn-login" to="/dashboard">Dashboard</router-link>
-        <button v-if="auth.token && this.$route.name == 'Dashboard'" class="btn btn-color btn-login" @click="loggout">Sair</button>
+        <span v-if="auth">olá, {{auth.name}}</span>
+        <router-link v-if="!auth" class="btn btn-color btn-login" to="/login">Login</router-link>
+        <router-link v-if="auth && this.$route.name != 'Dashboard'" class="btn btn-color btn-login" to="/dashboard">Dashboard</router-link>
+        <button v-if="auth && this.$route.name == 'Dashboard'" class="btn btn-color btn-login" @click="loggout">Sair</button>
       </div>
     </div>
   </header>
@@ -19,16 +19,7 @@ export default {
   name: 'HeaderVue',
   data(){
     return{
-      auth:{
-        token: null,
-        name: null
-      }
-    }
-  },
-  created(){
-    if(localStorage.getItem('user')){
-      this.auth.token = JSON.parse(localStorage.getItem('user')).token ? JSON.parse(localStorage.getItem('user')).token : null;
-      this.auth.name = JSON.parse(localStorage.getItem('user')).name ? JSON.parse(localStorage.getItem('user')).name : null;
+      auth: JSON.parse(localStorage.getItem('auth')),
     }
   },
   methods: {

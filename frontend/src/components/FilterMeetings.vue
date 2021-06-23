@@ -3,10 +3,12 @@
         <div class="d-flex">
             <h3 class="title">Filtrar reuniões</h3>
             <div class="ml-auto box-checkboxs">
+                <!-- PEGAR APENAS REUNIÕES ACEITAS -->
+                <label class="label-checkboxs" for="meetings-accept"><input type="checkbox" @change="update()" v-model="filter.filteringMeetingsAccept" id="meetings-accept" /> Apenas reuniões aceitas</label>
                 <!-- PEGAR APENAS REUNIÕES NOVAS -->
-                <label class="label-checkboxs" for="new-meetings"><input type="checkbox" v-model="filter.filteringNewMeetings" id="new-meetings" /> Apenas reuniões novas</label>
+                <label class="label-checkboxs" for="new-meetings"><input type="checkbox" @change="update()" v-model="filter.filteringNewMeetings" id="new-meetings" /> Apenas reuniões novas</label>
                 <!-- PEGAR APENAS REUNIÕES QUE AINDA NÃO FORAM REALIZADAS  -->
-                <label class="label-checkboxs" for="future-meetings"><input type="checkbox" v-model="filter.futureMeetings" id="future-meetings" /> Apenas reuniões futuras</label>
+                <label class="label-checkboxs" for="future-meetings"><input type="checkbox" @change="update()" v-model="filter.futureMeetings" id="future-meetings" /> Apenas reuniões futuras</label>
             </div>
         </div>
         <form class="form" v-on:submit.prevent="update()">
@@ -27,7 +29,7 @@
                     <input type="text" class="form-control" v-model="filter.subject" />
                 </div>
                 <!-- DATA -->
-                <div class="form-group col-12 col-sm" style="max-width: 180px !important;">
+                <div class="form-group col-12 col-sm" style="max-width: 182px !important;">
                     <label>Data</label>
                     <input type="date" class="form-control" v-model="filter.date" />
                 </div>
@@ -60,9 +62,10 @@ export default {
     methods:{
         // FECHAR MODAL
         update() {
+            console.log('filtrar');
             this.$emit('update');
         },
-    }
+    },
 }
 </script>
 
