@@ -22,7 +22,9 @@ O projeto inclui:
 - `cd backend`
 - `composer install`
 
-> _Obs: Configurar variáveis de ambiente (arquivo ".env" -> DATABASE e MAIL)
+> _Obs: Criar arquivo ".env" e configurar variáveis de ambiente (DATABASE e MAIL)
+
+- `php artisan key:generate` - criar chave da aplicação
 
 - `php artisan migrate`
 - `php artisan db:seed`
