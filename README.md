@@ -65,7 +65,11 @@ $ php artisan ui vue --auth
 $ npm install
 
 //PARA ENVIO DE NOTIFICAÇÕES/EMAILS
-php artisan make:notification NewMeetingNotification
-php artisan vendor:publish --tag=laravel-notifications
+$ php artisan make:notification NewMeetingNotification
+$ php artisan vendor:publish --tag=laravel-notifications
+
+//CRIAR SEEDERS
+$ php artisan make:seeder UserSeeder
+$ php artisan db:seed
 
 ```

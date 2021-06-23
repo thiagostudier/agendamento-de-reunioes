@@ -109,6 +109,13 @@ section.block{
     box-shadow: 1px 3px 9px 1px rgb(247 63 63 / 50%);
 }
 
+.btn.btn-remove {
+    color: #FB6969;
+    background-color: #fff !important;
+    border: 1px solid #FB6969;
+    box-shadow: 1px 3px 9px 1px rgb(247 63 63 / 50%);
+}
+
 .btn.btn-icon{
     padding: 10px 15px;
 }

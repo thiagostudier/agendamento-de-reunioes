@@ -39,7 +39,8 @@ export default {
         updateStatus(id, status){
             // MÉTODO AXIOS - ATUALIZAR REUNIÃO
             api.put(`meetings-accept/`+id, 
-            {status: status})
+            {status: status},
+            {headers: {"Authorization":"Bearer "+this.auth.token}})
             .then(response => {
                 if(response.data.errors){
                     // NOTIFICAÇÃO

@@ -46,6 +46,8 @@
                     email: null,
                     subject: null,
                     date: null,
+                    date_start: null,
+                    date_end: null,
                     start: null,
                     end: null,
                     futureMeetings: null,
@@ -61,6 +63,8 @@
                 this.filter.email = JSON.parse(localStorage.getItem('filtering')).email ? JSON.parse(localStorage.getItem('filtering')).email : null;
                 this.filter.subject = JSON.parse(localStorage.getItem('filtering')).subject ? JSON.parse(localStorage.getItem('filtering')).subject : null;
                 this.filter.date = JSON.parse(localStorage.getItem('filtering')).date ? JSON.parse(localStorage.getItem('filtering')).date : null;
+                this.filter.date_start = JSON.parse(localStorage.getItem('filtering')).date_start ? JSON.parse(localStorage.getItem('filtering')).date_start : null;
+                this.filter.date_end = JSON.parse(localStorage.getItem('filtering')).date_end ? JSON.parse(localStorage.getItem('filtering')).date_end : null;
                 this.filter.start = JSON.parse(localStorage.getItem('filtering')).start ? JSON.parse(localStorage.getItem('filtering')).start : null;
                 this.filter.end = JSON.parse(localStorage.getItem('filtering')).end ? JSON.parse(localStorage.getItem('filtering')).end : null;
                 this.filter.futureMeetings = JSON.parse(localStorage.getItem('filtering')).futureMeetings ? JSON.parse(localStorage.getItem('filtering')).futureMeetings : null;
@@ -74,7 +78,7 @@
             filterMeetings(){
                 // MÉTODO AXIOS - PEGAR REUNIÕES
                 api.post(`filter`, 
-                {name: this.filter.name, email: this.filter.email, subject: this.filter.subject, date: this.filter.date, start: this.filter.start, end: this.filter.end, futureMeetings: this.filter.futureMeetings, filteringNewMeetings: this.filter.filteringNewMeetings, filteringMeetingsAccept: this.filter.filteringMeetingsAccept})
+                {name: this.filter.name, email: this.filter.email, subject: this.filter.subject, date: this.filter.date, date_start: this.filter.date_start, date_end: this.filter.date_end, start: this.filter.start, end: this.filter.end, futureMeetings: this.filter.futureMeetings, filteringNewMeetings: this.filter.filteringNewMeetings, filteringMeetingsAccept: this.filter.filteringMeetingsAccept})
                 .then(response => {
                     this.meetings = response.data;
                     localStorage.setItem('filtering', JSON.stringify(this.filter));

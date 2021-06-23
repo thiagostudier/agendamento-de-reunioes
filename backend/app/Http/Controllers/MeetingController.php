@@ -13,7 +13,7 @@ class MeetingController extends Controller
     //LISTAR REUNIÕES
     public function index(){
         // PEGAR AS REUNIÕES
-        $meetings = Meeting::all();
+        $meetings = Meeting::orderBy('date', 'asc')->orderBy('start', 'asc')->all();
         // FORMULAR DADOS
         $meetings->map(function($meeting){
             $meeting->date = date("d/m/Y", strtotime($meeting->date));
@@ -47,6 +47,14 @@ class MeetingController extends Controller
         ->where('date', 'like', '%'.$date.'%')
         ->where('start', 'like', '%'.$start.'%')
         ->where('end', 'like', '%'.$end.'%');
+        // POR DATA INICIAL
+        if(isset($data['date_start'])){
+            $meetings = $meetings->where('date', '>=', $data['date_start']);
+        }
+        // POR DATA FINAL
+        if(isset($data['date_end'])){
+            $meetings = $meetings->where('date', '<=', $data['date_end']);
+        }
         // SE APENAS AS REUNIÕES ACEITAS
         if(isset($data['filteringMeetingsAccept']) && $data['filteringMeetingsAccept'] == true){
             $meetings = $meetings->where('status', true);
@@ -61,13 +69,9 @@ class MeetingController extends Controller
             $meetings = $meetings->where('date','>=',$date);
         }
         // PEGAR OS DADOS
-        $meetings = $meetings->get();
+        $meetings = $meetings->orderBy('date', 'asc')->orderBy('start', 'asc')->get();
         // FORMULAR DADOS
         $meetings->map(function($meeting){
-            // $meeting->title = $meeting->name.' | '.$meeting->subject;
-            // $meeting->start = $meeting->date.'T'.$meeting->start;
-            // $meeting->end = $meeting->date.'T'.$meeting->end;
-            // $meeting->description = 'Lecture';
             $meeting->date = date("d/m/Y", strtotime($meeting->date));
             $meeting->start = date("H:i", strtotime($meeting->start));
             $meeting->end = date("H:i", strtotime($meeting->end));
@@ -80,14 +84,17 @@ class MeetingController extends Controller
     public function store(Request $request){
         // PEGAR OS DADOS
         $data = $request->all();
+        // PEGAR DIA DA SEMANA
+        $data['week'] = date("D", strtotime($data['date']));
         // VALIDAR CAMPOS
         $validation = Validator::make($data, [
             'name' => 'required|string|max:255|min:1',
             'email' => 'required|email|string|max:255|min:1',
             'subject' => 'required|string|max:255|min:1',
             'date' => 'required|date|date_format:Y-m-d',
-            'start' => 'required|date_format:H:i',
-            'end' => 'required|date_format:H:i',
+            'start' => 'required|date_format:H:i|after_or_equal:08:00|before_or_equal:18:00',
+            'end' => 'required|date_format:H:i|after_or_equal:08:00|before_or_equal:18:00',
+            'week' => 'required|in:Mon,Tue,Wed,Thu,Fri',
         ]);
         // SE HOUVER ERROS, RETORNAR PARA O USUÁRIO
         if($validation->fails()){
@@ -130,8 +137,8 @@ class MeetingController extends Controller
             'email' => 'required|email|string|max:255|min:1',
             'subject' => 'required|string|max:255|min:1',
             'date' => 'required|date|date_format:Y-m-d',
-            'start' => 'required|date_format:H:i',
-            'end' => 'required|date_format:H:i',
+            'start' => 'required|date_format:H:i|after_or_equal:08:00|before_or_equal:18:00',
+            'end' => 'required|date_format:H:i|after_or_equal:08:00|before_or_equal:18:00',
             'status' => 'boolean',
             'new' => 'boolean',
         ]);
@@ -141,7 +148,7 @@ class MeetingController extends Controller
         }
         // VALIDAR HORÁRIOS DA REUNIÃO
         if($meeting->status == true){
-            $validation = Meeting::validateDates($data);
+            $validation = Meeting::validateDates($id, $data);
             if(!$validation){
                 return ['errors' => ['date'=>['Há uma reunião marcada no mesmo horário.']]];
             }
@@ -168,7 +175,7 @@ class MeetingController extends Controller
         }
         // VALIDAR HORÁRIOS DA REUNIÃO
         if($data['status'] == true){
-            $validation = Meeting::validateDates($meeting);
+            $validation = Meeting::validateDates($id, $meeting);
             if(!$validation){
                 return ['errors' => 'Há uma reunião marcada no mesmo horário.'];
             }
@@ -178,6 +185,16 @@ class MeetingController extends Controller
             'status' => $data['status'],
             'new' => 0
         ]);
+        // RETORNAR REUNIÃO NOVA
+        return $meeting;
+    }
+
+    //ATUALIZAR REUNIÃO
+    public function delete(Request $request, $id){
+        // PEGAR REUNIÃO
+        $meeting = Meeting::findOrFail($id);
+        // REMOVER REUNIÃO
+        $meeting->delete();
         // RETORNAR REUNIÃO NOVA
         return $meeting;
     }

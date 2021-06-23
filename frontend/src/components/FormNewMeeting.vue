@@ -25,10 +25,11 @@
             </div>
             <div class="row">
                 <!-- DATA -->
-                <div class="form-group col-12 col-sm" :class="{ 'form-group-add-error' : errors.date }">
+                <div class="form-group col-12 col-sm" :class="{ 'form-group-add-error' : errors.date || errors.week }">
                     <label for="date">Data da reunião</label>
                     <input type="date" class="form-control" id="date" v-model="newMeeting.date" />
                     <small v-if="errors.date" class="form-text text-muted">{{errors.date[0]}}</small>
+                    <small v-if="errors.week" class="form-text text-muted">{{errors.week[0]}}</small>
                 </div>
                 <!-- INÍCIO -->
                 <div class="form-group col-12 col-sm" :class="{ 'form-group-add-error' : errors.start }">
@@ -43,8 +44,14 @@
                     <small v-if="errors.end" class="form-text text-muted">{{errors.end[0]}}</small>
                 </div>
             </div>
-            <button v-if="!this.edit" class="btn btn-send d-block ml-auto" v-on:click="createMeeting()">Agendar</button>
-            <button v-if="this.edit" class="btn btn-send d-block ml-auto" v-on:click="updateMeeting()">Editar</button>
+            <div class="d-flex">
+                <!-- CRIAR -->
+                <button v-if="!this.edit" class="btn btn-send d-block ml-auto" v-on:click="createMeeting()">Agendar</button>
+                <!-- REMOVER -->
+                <button v-if="this.edit" class="btn btn-remove d-block mr-auto" v-on:click="removeMeeting()">Apagar</button>
+                <!-- ALTERAR -->
+                <button v-if="this.edit" class="btn btn-send d-block ml-auto" v-on:click="updateMeeting()">Editar</button>
+            </div>
         </div>
 
     </div>
@@ -64,6 +71,7 @@ export default {
     props:['results'],
     data(){
         return{
+            auth: JSON.parse(localStorage.getItem('auth')),
             edit: false,
             selectedDate: null,
             newMeeting:{
@@ -81,16 +89,19 @@ export default {
                 email: null,
                 start: null,
                 end: null,
+                week: null,
             },
         }
     },
     created(){
         if(this.$route.params.id){
-            this.getMeeting(this.$route.params.id);
+            this.getMeeting();
         }
     },
     methods: {
         createMeeting(){
+            // LIMPAR ERROS
+            this.clearErrors(); 
             // MÉTODO AXIOS - CRIAR REUNIÃO
             api.post(`meetings`, 
             {name: this.newMeeting.name, email: this.newMeeting.email, subject: this.newMeeting.subject, date: this.newMeeting.date, start: this.newMeeting.start, end: this.newMeeting.end})
@@ -106,6 +117,10 @@ export default {
                         text: 'A solicitação de reunião foi enviada com sucesso!',
                         position: 'top right'
                     });
+                    // LIMPAR ERROS
+                    this.clearErrors();
+                    // FILTRAR
+                    this.filter();
                     // LIMPAR DADOS
                     this.newMeeting.name = null;
                     this.newMeeting.email = null;
@@ -127,9 +142,12 @@ export default {
             });
         },
         updateMeeting(){
-            // MÉTODO AXIOS - CRIAR REUNIÃO
+            // LIMPAR ERROS
+            this.clearErrors();
+            // MÉTODO AXIOS - EDITAR REUNIÃO
             api.put(`meetings/`+this.$route.params.id, 
-            {name: this.newMeeting.name, email: this.newMeeting.email, subject: this.newMeeting.subject, date: this.newMeeting.date, start: this.newMeeting.start, end: this.newMeeting.end})
+            {name: this.newMeeting.name, email: this.newMeeting.email, subject: this.newMeeting.subject, date: this.newMeeting.date, start: this.newMeeting.start, end: this.newMeeting.end},
+            {headers: {"Authorization":"Bearer "+this.auth.token}})
             .then(response => {
                 // SE HOUVER ERRO NO CADASTRO
                 if(response.data.errors){
@@ -158,9 +176,9 @@ export default {
                 });
             });
         },
-        getMeeting(id){
+        getMeeting(){
             // MÉTODO AXIOS - PEGAR REUNIÕES
-            api.get(`meetings/`+id)
+            api.get(`meetings/`+this.$route.params.id)
             .then(response => {
                 // PEGAR OS DADOS DA REUNIÃO
                 this.edit = true;
@@ -182,6 +200,49 @@ export default {
                     position: 'top right'
                 });
             });
+        },
+        removeMeeting(){
+            // MÉTODO AXIOS - REMOVER REUNIÃO
+            api.delete(`meetings/`+this.$route.params.id,
+            {headers: {"Authorization":"Bearer "+this.auth.token}})
+            .then(response => {
+                // SE HOUVER ERRO NA REMOÇÃO
+                if(response.data.errors){
+                    this.errors = response.data.errors;
+                }else{
+                    // NOTIFICAÇÃO
+                    this.$notify({
+                        closeOnClick: true,
+                        type: 'success',
+                        text: 'Reunião removida com sucesso!',
+                        position: 'top right'
+                    });
+                    // RETORNAR PARA O DASHBOARD
+                    this.$router.push('/dashboard');
+                }
+                
+            })
+            .catch(e => {
+                console.log(e);
+                // NOTIFICAÇÃO
+                this.$notify({
+                    closeOnClick: true,
+                    type: 'error',
+                    text: 'Houve algum erro ao cadastrar a reunião!',
+                    position: 'top right'
+                });
+            });
+        },
+        filter() {
+            this.$emit('filter');
+        },
+        clearErrors(){
+            this.errors.name = null;
+            this.errors.date = null;
+            this.errors.subject = null;
+            this.errors.email = null;
+            this.errors.start = null;
+            this.errors.week = null;
         }
     }
 }

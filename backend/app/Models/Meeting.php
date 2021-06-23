@@ -22,7 +22,7 @@ class Meeting extends Model
         'updated_at',
     ];
 
-    public static function validateDates($data){
+    public static function validateDates($id, $data){
         // FORMULAR A DATA E OS HORÁRIOS
         $new_date = date("Y-m-d", strtotime($data['date']));
         $new_start = date("H:i", strtotime($data['start']));
@@ -31,7 +31,7 @@ class Meeting extends Model
         $new_start = date("Y-m-d H:i:s", strtotime($new_date." ".$new_start));
         $new_end = date("Y-m-d H:i:s", strtotime($new_date." ".$new_end));
         // VALIDAR HORÁRIO DA REUNIÃO - PEGAR REUNIÕES ACEITAS
-        $meetings = Meeting::where('status', true)->get();
+        $meetings = Meeting::where('id', '!=', $id)->where('status', true)->get();
         // VARIAVEL DE RETORNO
         $validate = true;
         foreach($meetings as $meeting){

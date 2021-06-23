@@ -28,21 +28,26 @@
                     <label>Pauta</label>
                     <input type="text" class="form-control" v-model="filter.subject" />
                 </div>
-                <!-- DATA -->
+                <!-- DATA INICIAL -->
                 <div class="form-group col-12 col-sm" style="max-width: 182px !important;">
-                    <label>Data</label>
-                    <input type="date" class="form-control" v-model="filter.date" />
+                    <label>Data inicial</label>
+                    <input type="date" class="form-control" v-model="filter.date_start" />
                 </div>
-                <!-- INÍCIO -->
+                <!-- DATA FINAL -->
+                <div class="form-group col-12 col-sm" style="max-width: 182px !important;">
+                    <label>Data final</label>
+                    <input type="date" class="form-control" v-model="filter.date_end" />
+                </div>
+                <!-- INÍCIO
                 <div class="form-group col-12 col-sm" style="max-width: 75px !important;">
                     <label>Inicial</label>
                     <the-mask type="text" masked :mask="'##:##'" class="form-control" v-model="filter.start" placeholder="00:00"></the-mask>
-                </div>
-                <!-- FINAL -->
+                </div> -->
+                <!-- FINAL
                 <div class="form-group col-12 col-sm" style="max-width: 75px !important;">
                     <label>Final</label>
                     <the-mask type="text" masked :mask="'##:##'" class="form-control" v-model="filter.end" placeholder="00:00"></the-mask>
-                </div>
+                </div> -->
                 <button class="btn btn-send btn-icon ml-auto d-block" @click="update()"><i class="fa fa-search" aria-hidden="true"></i></button>
             </div>
         </form>
