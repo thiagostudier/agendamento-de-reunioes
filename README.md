@@ -15,8 +15,6 @@ O projeto inclui:
 - `git clone https://github.com/thiagostudier/agendamento-de-reunioes`
 - `cd agendamento-de-reunioes`
 
-### Instalar pacotes do node e subir ambiente
-
 #### Backend
 
 - `cd backend`
