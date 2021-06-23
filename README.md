@@ -79,3 +79,8 @@ $ php artisan make:seeder UserSeeder
 $ php artisan db:seed
 
 ```
+
+## Pendências
+
+- Testes unitários
+- Responsividade
