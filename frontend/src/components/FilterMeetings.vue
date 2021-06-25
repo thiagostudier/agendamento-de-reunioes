@@ -1,5 +1,5 @@
 <template>
-    <div id="filter-meeting" class="container">
+    <div id="filter-meeting">
         <div class="d-flex">
             <h3 class="title">Filtrar reuniões</h3>
             <div class="ml-auto box-checkboxs">
@@ -84,7 +84,17 @@ export default {
         filterMeetings(){
             // MÉTODO AXIOS - PEGAR REUNIÕES
             api.post(`filter`, 
-            {name: this.filter.name, email: this.filter.email, subject: this.filter.subject, date: this.filter.date, date_start: this.filter.date_start, date_end: this.filter.date_end, start: this.filter.start, end: this.filter.end, futureMeetings: this.filter.futureMeetings, filteringNewMeetings: this.filter.filteringNewMeetings, filteringMeetingsAccept: this.filter.filteringMeetingsAccept})
+            {name: this.filter.name, 
+            email: this.filter.email, 
+            subject: this.filter.subject, 
+            date: this.filter.date, 
+            date_start: this.filter.date_start, 
+            date_end: this.filter.date_end, 
+            start: this.filter.start, 
+            end: this.filter.end, 
+            futureMeetings: this.filter.futureMeetings, 
+            filteringNewMeetings: this.filter.filteringNewMeetings, 
+            filteringMeetingsAccept: this.filter.filteringMeetingsAccept})
             .then(response => {
                 this.updateMeetings(response.data);
                 localStorage.setItem('filtering', JSON.stringify(this.filter));

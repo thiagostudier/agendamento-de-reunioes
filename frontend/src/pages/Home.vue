@@ -1,50 +1,35 @@
 <template>
-  <div>
-    <!-- CABEÇALHO -->
-    <header-vue></header-vue>
-    <!-- TEMPLATE -->
-    <site-template>
-      <!-- FORMULÁRIO -->
-      <form-new-meeting></form-new-meeting>
-      <br />
-      <hr />
-      <br />
-      <!-- FILTRO -->
-      <filter-meetings :updateMeetings="updateMeetings"></filter-meetings>
-      <!-- REUNIÕES -->
-      <div class="container mt-4">
-        <div v-for="meeting in meetings" :key="meeting.id">
-          <meeting :meeting="meeting" :auth="auth"></meeting>
-        </div>
-        <div v-if="!meetings.length">
-          <p>Nenhuma reunião encontrada</p>
-        </div>
+  <!-- TEMPLATE -->
+  <site-template>
+    <!-- FORMULÁRIO -->
+    <form-new-meeting class="mb-4"/>
+    <!-- FILTRO -->
+    <filter-meetings class="mb-4" :updateMeetings="updateMeetings"></filter-meetings>
+    <!-- REUNIÕES -->
+    <div class="container mb-4">
+      <div v-for="meeting in meetings" :key="meeting.id">
+        <meeting :meeting="meeting" :auth="auth"></meeting>
       </div>
-      <br />
-      <hr />
-      <br />
-      <!-- AGENDA -->
-      <schedule :meetings="meetings"></schedule>
-      <br />
-      <br />
-    </site-template>
-  </div>
+      <div v-if="!meetings.length">
+        <p>Nenhuma reunião encontrada</p>
+      </div>
+    </div>
+    <!-- AGENDA -->
+    <schedule :meetings="meetings"></schedule>
+  </site-template>
 </template>
 
 <script>
 
 import SiteTemplate from '@/templates/SiteTemplate';
-import HeaderVue from '@/components/HeaderVue';
-import FormNewMeeting from '@/components/FormNewMeeting.vue';
-import Schedule from '@/components/Schedule.vue';
+import FormNewMeeting from '@/components/FormNewMeeting';
+import Schedule from '@/components/Schedule';
 import FilterMeetings from '@/components/FilterMeetings';
 import Meeting from '@/components/Meeting';
-import { api } from '@/services/api.ts';
 
 export default {
   name: 'Home',
   components: {
-    HeaderVue,
     SiteTemplate,
     FormNewMeeting,
     Schedule,

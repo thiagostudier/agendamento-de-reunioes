@@ -1,23 +1,18 @@
 <template>
-    <div id="dashboard">
-        <!-- CABEÇALHO -->
-        <header-vue></header-vue>
+    <site-template>
         <!-- FORMULÁRIO -->
-        <div class="container">
-            <form-new-meeting></form-new-meeting>
-        </div>
-    </div>
+        <form-new-meeting></form-new-meeting>
+    </site-template>
 </template>
 
 <script>
-
-    import HeaderVue from '@/components/HeaderVue';
-    import FormNewMeeting from '@/components/FormNewMeeting.vue';
+    import SiteTemplate from '@/templates/SiteTemplate';
+    import FormNewMeeting from '@/components/FormNewMeeting';
     
     export default {
         name: 'UpdateMeeting',
         components: {
-            HeaderVue,
+            SiteTemplate,
             FormNewMeeting
         },
     }

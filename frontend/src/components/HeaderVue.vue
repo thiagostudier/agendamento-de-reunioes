@@ -34,6 +34,7 @@ export default {
 <style scoped>
 
   header{
+    margin-bottom: 25px;
     padding: 15px 0px;
   }
 

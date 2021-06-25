@@ -1,9 +1,7 @@
 <template>
-    <div id="dashboard">
-        <!-- CABEÇALHO -->
-        <header-vue></header-vue>
+    <site-template>
         <!-- FILTRO -->
-      <filter-meetings :updateMeetings="updateMeetings"></filter-meetings>
+      <filter-meetings class="mb-4" :updateMeetings="updateMeetings"></filter-meetings>
         <!-- REUNIÕES -->
         <div class="container mt-4">
             <div v-for="meeting in meetings" :key="meeting.id">
@@ -12,27 +10,24 @@
             <div v-if="!meetings.length">
                 <p>Nenhuma reunião encontrada</p>
             </div>
-            <br />
-            <hr />
-            <br />
             <!-- AGENDA -->
             <schedule :meetings="meetings"></schedule>
         </div>
-    </div>
+    </site-template>
 </template>
 
 <script>
 
-    import HeaderVue from '@/components/HeaderVue';
     import FilterMeetings from '@/components/FilterMeetings';
     import Meeting from '@/components/Meeting';
-    import Schedule from '@/components/Schedule.vue';
+    import Schedule from '@/components/Schedule';
+    import SiteTemplate from '@/templates/SiteTemplate';
     import { api } from '@/services/api.ts';
 
     export default {
         name: 'Dashboard',
         components: {
-            HeaderVue,
+            SiteTemplate,
             FilterMeetings,
             Meeting,
             Schedule
