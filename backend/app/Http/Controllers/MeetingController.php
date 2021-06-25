@@ -13,13 +13,8 @@ class MeetingController extends Controller
     //LISTAR REUNIÕES
     public function index(){
         // PEGAR AS REUNIÕES
-        $meetings = Meeting::orderBy('date', 'asc')->orderBy('start', 'asc')->all();
-        // FORMULAR DADOS
-        $meetings->map(function($meeting){
-            $meeting->date = date("d/m/Y", strtotime($meeting->date));
-            $meeting->start = date("H:i", strtotime($meeting->start));
-            $meeting->end = date("H:i", strtotime($meeting->end));
-        });
+        $meetings = Meeting::select('name','email','subject','date','start','end','status','new')
+            ->orderBy('date', 'asc')->orderBy('start', 'asc')->get();
         return $meetings;
     }
 
@@ -34,48 +29,38 @@ class MeetingController extends Controller
     public function filter(Request $request){
         // PEGAR AS REUNIÕES
         $data = $request->all();
+        // DADOS DA CONSULTA
         $name = $data['name'] ?? '';
         $email = $data['email'] ?? '';
         $subject = $data['subject'] ?? '';
         $date = $data['date'] ?? '';
         $start = $data['start'] ?? '';
         $end = $data['end'] ?? '';
+        $date_start = $data['date_start'] ?? false;
+        $date_end = $data['date_end'] ?? false;
+        $filteringMeetingsAccept = $data['filteringMeetingsAccept'] ?? false;
+        $filteringNewMeetings = $data['filteringNewMeetings'] ?? false;
+        $futureMeetings = $data['futureMeetings'] ?? false;
         // FILTRAR REUNIÕES
         $meetings = Meeting::where('name', 'like', '%'.$name.'%')
         ->where('email', 'like', '%'.$email.'%')
         ->where('subject', 'like', '%'.$subject.'%')
         ->where('date', 'like', '%'.$date.'%')
         ->where('start', 'like', '%'.$start.'%')
-        ->where('end', 'like', '%'.$end.'%');
-        // POR DATA INICIAL
-        if(isset($data['date_start'])){
-            $meetings = $meetings->where('date', '>=', $data['date_start']);
-        }
-        // POR DATA FINAL
-        if(isset($data['date_end'])){
-            $meetings = $meetings->where('date', '<=', $data['date_end']);
-        }
-        // SE APENAS AS REUNIÕES ACEITAS
-        if(isset($data['filteringMeetingsAccept']) && $data['filteringMeetingsAccept'] == true){
-            $meetings = $meetings->where('status', true);
-        }
-        // SE APENAS AS REUNIÕES NOVAS
-        if(isset($data['filteringNewMeetings']) && $data['filteringNewMeetings'] == true){
-            $meetings = $meetings->where('new', true);
-        }
-        // SE APENAS AS REUNIÕES FUTURAS
-        if(isset($data['futureMeetings']) && $data['futureMeetings'] == true){
-            $date = date("Y-m-d");
-            $meetings = $meetings->where('date','>=',$date);
-        }
+        ->where('end', 'like', '%'.$end.'%')
+        ->when($date_start, function ($query, $date_start) {
+            return $query->where('date', '>=', $date_start);
+        })->when($date_end, function ($query, $date_end) {
+            return $query->where('date', '<=', $date_end);
+        })->when($filteringMeetingsAccept, function ($query, $filteringMeetingsAccept) {
+            return $query->where('status', true);
+        })->when($filteringNewMeetings, function ($query, $filteringNewMeetings) {
+            return $query->where('new', true);
+        })->when($futureMeetings, function ($query, $futureMeetings) {
+            return $query->where('date','>=',date("Y-m-d"));
+        });
         // PEGAR OS DADOS
         $meetings = $meetings->orderBy('date', 'asc')->orderBy('start', 'asc')->get();
-        // FORMULAR DADOS
-        $meetings->map(function($meeting){
-            $meeting->date = date("d/m/Y", strtotime($meeting->date));
-            $meeting->start = date("H:i", strtotime($meeting->start));
-            $meeting->end = date("H:i", strtotime($meeting->end));
-        });
 
         return $meetings;
     }

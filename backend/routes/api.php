@@ -8,14 +8,14 @@ Route::prefix('v1')->group(function(){
     Route::post('/login', 'App\Http\Controllers\UserController@login');
     // VALIDATE LOGIN
     Route::middleware('auth:api')->post('/get-me', 'App\Http\Controllers\UserController@getMe');
+    // CRIAR REUNIÃO
+    Route::post('/meetings', 'App\Http\Controllers\MeetingController@store');
     // LISTAR REUNIÕES
     Route::get('/meetings', 'App\Http\Controllers\MeetingController@index');
     // PEGAR REUNIÃO
     Route::get('/meetings/{id}', 'App\Http\Controllers\MeetingController@show');
     // FILTRAR REUNIÕES
     Route::post('/filter', 'App\Http\Controllers\MeetingController@filter');
-    // CRIAR REUNIÃO
-    Route::post('/meetings', 'App\Http\Controllers\MeetingController@store');
     // ATUALIZAR REUNIÃO
     Route::middleware('auth:api')->put('/meetings/{id}', 'App\Http\Controllers\MeetingController@update');
     // REMOVER REUNIÃO

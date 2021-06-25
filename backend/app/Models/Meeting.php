@@ -20,6 +20,13 @@ class Meeting extends Model
         'new',
         'created_at',
         'updated_at',
+        'date_format'
+    ];
+
+    protected $casts = [
+        'date'=>'datetime:d/m/Y',
+        'start'=>'datetime:H:i',
+        'end'=>'datetime:H:i'
     ];
 
     public static function validateDates($id, $data){
@@ -51,4 +58,5 @@ class Meeting extends Model
 
         return $validate;
     }
+
 }

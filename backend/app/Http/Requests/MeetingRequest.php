@@ -14,12 +14,14 @@ class MeetingRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:255|min:1',
-            'email' => 'required|string|max:255|min:1',
-            'subject' => 'required|string|max:255|min:1',
-            'date' => 'required|date|date_format:Y-m-d',
-            'start' => 'required|date_format:H:i',
-            'end' => 'required|date_format:H:i',
+            'name' => 'required',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'name.required' => 'A title is required',
         ];
     }
 }
