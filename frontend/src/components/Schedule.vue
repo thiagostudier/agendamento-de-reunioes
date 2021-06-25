@@ -19,46 +19,26 @@ export default {
     data(){
         return{
             auth: JSON.parse(localStorage.getItem('auth')),
-            schedule_meetings: [],
             events: [],
             calendarOptions: {
                 editable: false,
             }
         }
     },
-    created(){
-        this.getMeetingsSchedule();
-    },
+    props: ['meetings'],
     methods:{
-        getMeetingsSchedule(){
-            // MÉTODO AXIOS - PEGAR REUNIÕES
-            api.post(`filter`, 
-            {filteringMeetingsAccept: true})
-            .then(response => {
-                this.schedule_meetings = response.data;
-                this.getEvents();
-            })
-            .catch(e => {
-                // NOTIFICAÇÃO
-                this.$notify({
-                    closeOnClick: true,
-                    type: 'error',
-                    text: 'Houve algum erro ao buscar as reuniões cadastradas!',
-                    position: 'top right'
-                });
-            });
-        },
         getEvents(){
-            for (let index = 0; index < this.schedule_meetings.length; index++) {
+            this.events = [];
+            for (let index = 0; index < this.meetings.length; index++) {
                 var title = 'Reunião';
                 // SE ESTIVER LOGADO
                 if(this.auth && this.auth.token){
-                    title = this.schedule_meetings[index].name+' | '+this.schedule_meetings[index].subject;
+                    title = this.meetings[index].name+' | '+this.meetings[index].subject;
                 }
                 this.events.push({
                     'title': title,
-                    'start': this.formatStringDate(this.schedule_meetings[index].date)+'T'+this.schedule_meetings[index].start,
-                    'end': this.formatStringDate(this.schedule_meetings[index].date)+'T'+this.schedule_meetings[index].end,
+                    'start': this.formatStringDate(this.meetings[index].date)+'T'+this.meetings[index].start,
+                    'end': this.formatStringDate(this.meetings[index].date)+'T'+this.meetings[index].end,
                 });
             }
         },
@@ -69,6 +49,11 @@ export default {
             return ano + '-' + ("0"+mes).slice(-2) + '-' + ("0"+dia).slice(-2);
         }
     },
+    watch: { 
+      	meetings: function(newVal, oldVal) {
+            this.getEvents();
+        }
+    }
 }
 </script>
 

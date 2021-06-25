@@ -119,8 +119,6 @@ export default {
                     });
                     // LIMPAR ERROS
                     this.clearErrors();
-                    // FILTRAR
-                    this.filter();
                     // LIMPAR DADOS
                     this.newMeeting.name = null;
                     this.newMeeting.email = null;
@@ -131,7 +129,6 @@ export default {
                 }
             })
             .catch(e => {
-                console.log(e);
                 // NOTIFICAÇÃO
                 this.$notify({
                     closeOnClick: true,
@@ -166,7 +163,6 @@ export default {
                 
             })
             .catch(e => {
-                console.log(e);
                 // NOTIFICAÇÃO
                 this.$notify({
                     closeOnClick: true,
@@ -223,7 +219,6 @@ export default {
                 
             })
             .catch(e => {
-                console.log(e);
                 // NOTIFICAÇÃO
                 this.$notify({
                     closeOnClick: true,
@@ -232,9 +227,6 @@ export default {
                     position: 'top right'
                 });
             });
-        },
-        filter() {
-            this.$emit('filter');
         },
         clearErrors(){
             this.errors.name = null;

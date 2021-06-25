@@ -54,7 +54,6 @@
                 api.post(`login`, 
                 {email: this.user.email,password: this.user.password})
                 .then(response => {
-                    console.log(response);
                     if(response.data.token){
                         //GUARDAR SESSÃO DO USUÁRIO
                         localStorage.setItem('auth', JSON.stringify(response.data)); 
