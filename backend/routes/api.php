@@ -14,8 +14,6 @@ Route::prefix('v1')->group(function(){
     Route::get('/meetings', 'App\Http\Controllers\MeetingController@index');
     // PEGAR REUNIÃO
     Route::get('/meetings/{id}', 'App\Http\Controllers\MeetingController@show');
-    // FILTRAR REUNIÕES
-    Route::post('/filter', 'App\Http\Controllers\MeetingController@filter');
     // ATUALIZAR REUNIÃO
     Route::middleware('auth:api')->put('/meetings/{id}', 'App\Http\Controllers\MeetingController@update');
     // REMOVER REUNIÃO

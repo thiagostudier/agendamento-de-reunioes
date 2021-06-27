@@ -11,38 +11,24 @@ use App\Notifications\NewMeetingNotification;
 class MeetingController extends Controller
 {
     //LISTAR REUNIÕES
-    public function index(){
-        // PEGAR AS REUNIÕES
-        $meetings = Meeting::select('name','email','subject','date','start','end','status','new')
-            ->orderBy('date', 'asc')->orderBy('start', 'asc')->get();
-        return $meetings;
-    }
-
-    //PEGAR REUNIÃO
-    public function show($id){
-        // PEGAR REUNIÃO
-        $meetings = Meeting::findOrFail($id);
-        return $meetings;
-    }
-    
-    //FILTRAR REUNIÕES
-    public function filter(Request $request){
+    public function index(Request $request){
         // PEGAR AS REUNIÕES
         $data = $request->all();
         // DADOS DA CONSULTA
-        $name = $data['name'] ?? '';
-        $email = $data['email'] ?? '';
-        $subject = $data['subject'] ?? '';
-        $date = $data['date'] ?? '';
-        $start = $data['start'] ?? '';
-        $end = $data['end'] ?? '';
-        $date_start = $data['date_start'] ?? false;
-        $date_end = $data['date_end'] ?? false;
-        $filteringMeetingsAccept = $data['filteringMeetingsAccept'] ?? false;
-        $filteringNewMeetings = $data['filteringNewMeetings'] ?? false;
-        $futureMeetings = $data['futureMeetings'] ?? false;
+        $name = isset($data['name']) ? $data['name'] : '';
+        $email = isset($data['email']) ? $data['email'] : '';
+        $subject = isset($data['subject']) ? $data['subject'] : '';
+        $date = isset($data['date']) ? $data['date'] : '';
+        $start = isset($data['start']) ? $data['start'] : '';
+        $end = isset($data['end']) ? $data['end'] : '';
+        $date_start = isset($data['date_start']) ? $data['date_start'] : false;
+        $date_end = isset($data['date_end']) ? $data['date_end'] : false;
+        $filteringMeetingsAccept = isset($data['filteringMeetingsAccept']) && $data['filteringMeetingsAccept'] == "true" ? true : false;
+        $filteringNewMeetings = isset($data['filteringNewMeetings']) && $data['filteringNewMeetings'] == "true" ? true : false;
+        $futureMeetings = isset($data['futureMeetings']) && $data['futureMeetings'] == "true" ? true : false;
         // FILTRAR REUNIÕES
-        $meetings = Meeting::where('name', 'like', '%'.$name.'%')
+        $meetings = Meeting::select('name','email','subject','date','start','end','status','new')
+        ->where('name', 'like', '%'.$name.'%')
         ->where('email', 'like', '%'.$email.'%')
         ->where('subject', 'like', '%'.$subject.'%')
         ->where('date', 'like', '%'.$date.'%')
@@ -58,13 +44,19 @@ class MeetingController extends Controller
             return $query->where('new', true);
         })->when($futureMeetings, function ($query, $futureMeetings) {
             return $query->where('date','>=',date("Y-m-d"));
-        });
-        // PEGAR OS DADOS
-        $meetings = $meetings->orderBy('date', 'asc')->orderBy('start', 'asc')->get();
+        })
+        ->orderBy('date', 'asc')->orderBy('start', 'asc')->get();
 
         return $meetings;
     }
 
+    //PEGAR REUNIÃO
+    public function show($id){
+        // PEGAR REUNIÃO
+        $meetings = Meeting::findOrFail($id);
+        return $meetings;
+    }
+    
     //CADASTRAR REUNIÃO
     public function store(Request $request){
         // PEGAR OS DADOS
