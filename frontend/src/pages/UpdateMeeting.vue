@@ -1,7 +1,7 @@
 <template>
     <site-template>
         <!-- FORMULÁRIO -->
-        <form-new-meeting></form-new-meeting>
+        <form-new-meeting :id="id"></form-new-meeting>
     </site-template>
 </template>
 
@@ -15,6 +15,7 @@
             SiteTemplate,
             FormNewMeeting
         },
+        props: ['id']
     }
 
 </script>

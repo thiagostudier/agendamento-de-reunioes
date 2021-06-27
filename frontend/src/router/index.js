@@ -35,6 +35,7 @@ const router = new Router({
     {
       path: '/update-meeting/:id',
       name: 'UpdateMeeting',
+      props: true,
       component: UpdateMeeting,
       meta: {
         middleware: user

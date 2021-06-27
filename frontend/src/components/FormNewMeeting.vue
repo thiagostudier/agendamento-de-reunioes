@@ -68,7 +68,7 @@ export default {
     components:{
         TheMask
     },
-    props:['results'],
+    props: ['id'],
     data(){
         return{
             auth: JSON.parse(localStorage.getItem('auth')),
@@ -94,7 +94,7 @@ export default {
         }
     },
     created(){
-        if(this.$route.params.id){
+        if(this.id){
             this.getMeeting();
         }
     },
@@ -181,7 +181,7 @@ export default {
                 this.newMeeting.name = response.data.name;
                 this.newMeeting.email = response.data.email;
                 this.newMeeting.subject = response.data.subject;
-                this.newMeeting.date = response.data.date;
+                this.newMeeting.date = this.formatStringDate(response.data.date);
                 this.newMeeting.start = response.data.start;
                 this.newMeeting.end = response.data.end;
             })
@@ -196,6 +196,12 @@ export default {
                     position: 'top right'
                 });
             });
+        },
+        formatStringDate(data) {
+            var dia  = data.split("/")[0];
+            var mes  = data.split("/")[1];
+            var ano  = data.split("/")[2];
+            return ano + '-' + ("0"+mes).slice(-2) + '-' + ("0"+dia).slice(-2);
         },
         removeMeeting(){
             // MÉTODO AXIOS - REMOVER REUNIÃO

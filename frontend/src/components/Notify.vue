@@ -18,18 +18,17 @@ export default {
     'notify-me': Notify
   },
   data(){
-      return {
-          bus
-      }
+    return {
+      bus
+    }
   },
   mounted(){
-      this.bus.$emit('notify-me', {
-        data: {
-            title: 'The pygmy team :)',
-            text: 'this is my notification'
-        }
-
-      });
+    this.bus.$emit('notify-me', {
+      data: {
+        title: 'The pygmy team :)',
+        text: 'this is my notification'
+      }
+    });
   }
 
 }
