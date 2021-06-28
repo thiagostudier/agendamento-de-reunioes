@@ -19,7 +19,6 @@
     import Meeting from '@/components/Meeting';
     import Schedule from '@/components/Schedule';
     import SiteTemplate from '@/templates/SiteTemplate';
-    import { api } from '@/services/api.ts';
     import store from '@/store';
 
     export default {
