@@ -29,6 +29,7 @@
 <script>
 
     import { api } from '@/services/api.ts';
+    import store from '@/store';
 
     export default {
         name: 'Login',
@@ -55,8 +56,9 @@
                 {email: this.user.email,password: this.user.password})
                 .then(response => {
                     if(response.data.token){
-                        //GUARDAR SESSÃO DO USUÁRIO
-                        localStorage.setItem('auth', JSON.stringify(response.data)); 
+                        // AUTENTICAR PELO STORE
+                        var user = response.data;
+                        store.dispatch('login', { user })
                         // NOTIFICAÇÃO
                         this.$notify({
                             closeOnClick: true,

@@ -62,6 +62,7 @@
 
 import { TheMask } from 'vue-the-mask';
 import { api } from '@/services/api.ts';
+import store from '@/store';
 
 export default {
     name: 'FormNewMeeting',
@@ -71,7 +72,7 @@ export default {
     props: ['id'],
     data(){
         return{
-            auth: JSON.parse(localStorage.getItem('auth')),
+            auth: store.state.user || false,
             edit: false,
             selectedDate: null,
             newMeeting:{

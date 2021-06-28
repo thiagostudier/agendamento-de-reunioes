@@ -4,8 +4,7 @@ import Home from '@/pages/Home'
 import Login from '@/pages/Login'
 import Dashboard from '@/pages/Dashboard'
 import UpdateMeeting from '@/pages/UpdateMeeting'
-import user from '@/middleware/user';
-import login from '@/middleware/login';
+import store from '@/store';
 
 Vue.use(Router)
 
@@ -50,7 +49,7 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   // PEGAR TOKEN NO LOCALSTORAGE
-  var token = localStorage.getItem('auth') && JSON.parse(localStorage.getItem('auth')).token ? JSON.parse(localStorage.getItem('auth')).token : false;
+  var token = store.state.token;
   // SE FOR UMA ROTA COM AUTENTICÃO
   if (to.matched.some(record => record.meta.requiresAuth)){
     if(token){

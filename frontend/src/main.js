@@ -4,6 +4,7 @@ import router from './router'
 import VCalendar from 'v-calendar';
 import Notifications from 'vue-notification'
 import FullCalendar from 'vue-full-calendar'
+import user from './middleware/user'
 
 Vue.config.productionTip = false
 

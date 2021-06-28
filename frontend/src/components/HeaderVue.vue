@@ -15,16 +15,18 @@
 
 <script>
 
+import store from '@/store';
+
 export default {
   name: 'HeaderVue',
   data(){
     return{
-      auth: JSON.parse(localStorage.getItem('auth')),
+      auth: store.state.user || false,
     }
   },
   methods: {
     loggout(){
-      localStorage.clear();
+      store.dispatch('logout')
       this.$router.push('/login');
     },
   }

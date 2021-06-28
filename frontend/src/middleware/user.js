@@ -1,24 +1,24 @@
+import Vue from 'vue'
 import { api } from '@/services/api.ts';
+import store from '@/store';
 
-export default function log({ next, to }) {
-    // PEGAR O USUÁRIO
-    const auth = JSON.parse(localStorage.getItem('auth'));
+export default function user() {
+    // PEGAR TOKEN
+    var token = store.state.token || false;
     // VERIFICAR SE HÁ UM USUÁRIO LOGADO
-    if(auth != null){
-        api.post(`get-me`, {}, {headers: {"Authorization":"Bearer "+auth.token}},)
-        .then(response => {
-            if(response){
-                return next();
-            }else{
-                return next('/login');
+    if(token){
+        api.post(`get-me`, {}, {
+            headers: {
+                "Authorization":"Bearer "+token
             }
         })
+        .then(response => {
+            return true;
+        })
         .catch(e => {
-            localStorage.clear();
-            return next('/login');
+            return false;
         })
     }else{
-        localStorage.clear();
-        return next('/login');
+        return false;
     }
 }

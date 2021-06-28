@@ -23,6 +23,7 @@ import FormNewMeeting from '@/components/FormNewMeeting';
 import Schedule from '@/components/Schedule';
 import FilterMeetings from '@/components/FilterMeetings';
 import Meeting from '@/components/Meeting';
+import store from '@/store';
 
 export default {
   name: 'Home',
@@ -35,7 +36,7 @@ export default {
   },
   data(){
     return{
-      auth: JSON.parse(localStorage.getItem('auth')),
+      auth: store.state.user || false,
       meetings: [],
     }
   },

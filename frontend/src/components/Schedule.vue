@@ -10,6 +10,7 @@
 import 'fullcalendar/dist/fullcalendar.css'
 import { FullCalendar } from 'vue-full-calendar'
 import { api } from '@/services/api.ts';
+import store from '@/store';
 
 export default {
     name: 'Schedule',
@@ -18,7 +19,7 @@ export default {
     },
     data(){
         return{
-            auth: JSON.parse(localStorage.getItem('auth')),
+            auth: store.state.user || false,
             events: [],
             calendarOptions: {
                 editable: false,

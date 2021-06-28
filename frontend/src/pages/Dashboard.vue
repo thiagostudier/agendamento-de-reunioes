@@ -20,6 +20,7 @@
     import Schedule from '@/components/Schedule';
     import SiteTemplate from '@/templates/SiteTemplate';
     import { api } from '@/services/api.ts';
+    import store from '@/store';
 
     export default {
         name: 'Dashboard',
@@ -31,7 +32,7 @@
         },
         data(){
             return{
-                auth: JSON.parse(localStorage.getItem('auth')),
+                auth: store.state.user || false,
                 meetings: [],
             }
         },
