@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <header-vue />
-    <div class="container">
+    <div id="site-template" class="container">
       <slot></slot>
     </div>
     <footer-vue />
@@ -21,3 +21,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+#site-template{
+  flex: 1;
+}
+</style>

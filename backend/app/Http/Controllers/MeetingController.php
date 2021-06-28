@@ -92,29 +92,14 @@ class MeetingController extends Controller{
         $meeting = Meeting::findOrFail($id);
         // PEGAR OS DADOS
         $data = $request->all();
-        // PEGAR DIA DA SEMANA
-        $data['week'] = date("D", strtotime($data['date']));
-        // VALIDAR CAMPOS
-        $validation = Validator::make($data, [
-            'name' => 'required|string|max:255|min:1',
-            'email' => 'required|email|string|max:255|min:1',
-            'subject' => 'required|string|max:255|min:1',
-            'date' => 'required|date|date_format:Y-m-d',
-            'start' => 'required|date_format:H:i|after_or_equal:08:00|before_or_equal:18:00',
-            'end' => 'required|date_format:H:i|after_or_equal:08:00|before_or_equal:18:00',
-            'status' => 'boolean',
-            'new' => 'boolean',
-            'week' => 'required|in:Mon,Tue,Wed,Thu,Fri',
-        ]);
-        // SE HOUVER ERROS, RETORNAR PARA O USUÁRIO
-        if($validation->fails()){
-            return ['errors' => $validation->errors()];
-        }
         // VALIDAR HORÁRIOS DA REUNIÃO
         if($meeting->status == true){
             $validation = Meeting::validateDates($id, $data);
             if(!$validation){
-                return ['errors' => ['date'=>['Há uma reunião marcada no mesmo horário.']]];
+                $error = \Illuminate\Validation\ValidationException::withMessages([
+                    'date' => ['Há uma reunião marcada no mesmo horário.'],
+                ]);    
+                throw $error;
             }
         }
         // ATUALIZAR REUNIÃO

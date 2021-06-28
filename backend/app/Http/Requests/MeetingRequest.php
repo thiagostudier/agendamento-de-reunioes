@@ -8,6 +8,7 @@ class MeetingRequest extends FormRequest{
 
     protected function getValidatorInstance(){
         $data = $this->all();
+        // PEGAR O DIA DA SEMANA QUE ESTÁ SENDO USADO NO CAMPO DATE SE EXISTIR
         $data['week'] = isset($data['date']) ? date("D", strtotime($data['date'])) : '';
         $this->getInputSource()->replace($data);
         return parent::getValidatorInstance();
@@ -32,6 +33,7 @@ class MeetingRequest extends FormRequest{
 
     public function messages()
     {
+
         return [
             'required' => 'Este campo é obrigatório',
             'max' => 'O máximo de caracteres são 255',
