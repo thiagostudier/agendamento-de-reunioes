@@ -160,7 +160,6 @@ export default {
             {name: this.newMeeting.name, email: this.newMeeting.email, subject: this.newMeeting.subject, date: this.newMeeting.date, start: this.newMeeting.start, end: this.newMeeting.end},
             {headers: {"Authorization":"Bearer "+this.auth.token}})
             .then(response => {
-                console.log(response);
                 if(response.status == 200){
                     // NOTIFICAÇÃO
                     this.$notify({
