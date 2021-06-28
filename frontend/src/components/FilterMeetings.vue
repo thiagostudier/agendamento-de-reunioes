@@ -76,7 +76,7 @@ export default {
     },
     created(){
         // PEGAR DADOS DOS FILTROS EM LOCALHOST
-        this.filter = JSON.parse(localStorage.getItem('filtering'));
+        this.filter = localStorage.getItem('filtering') ? JSON.parse(localStorage.getItem('filtering')) : [];
         // FILTRAR DADOS
         this.filterMeetings(); 
     },

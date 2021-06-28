@@ -66,20 +66,17 @@
                         });
                         //ENCAMINHAR PARA TELA DO DASHBOARD
                         this.$router.push('/dashboard'); 
-                        // REMOVER LOADING
-                        this.loading = false;
-                    }else{
-                        // REMOVER LOADING
-                        this.loading = false;
-                        // RETORNO
+                    }else{              
                         this.errors.email = 'Usuário ou senha não compatíveis';
                     }
                 })
                 .catch(e => {
-                    // REMOVER LOADING
-                    this.loading = false;
                     this.errors.email = 'Usuário ou senha não compatíveis';
                 })
+                .finally(() => {
+                    // REMOVER LOADING
+                    this.loading = false;   
+                });
             }
         }
     }
