@@ -21,16 +21,16 @@ const router = new Router({
       name: 'Login',
       component: Login,
       meta: {
-        middleware: login
-      }
+        requiresNotAuth: true,
+      },
     },
     {
       path: '/dashboard',
       name: 'Dashboard',
       component: Dashboard,
       meta: {
-        middleware: user
-      }
+        requiresAuth: true,
+      },
     },
     {
       path: '/update-meeting/:id',
@@ -38,8 +38,8 @@ const router = new Router({
       props: true,
       component: UpdateMeeting,
       meta: {
-        middleware: user
-      }
+        requiresAuth: true,
+      },
     },
     {
       path: '*',
@@ -48,44 +48,24 @@ const router = new Router({
   ]
 });
 
-
-// Creates a `nextMiddleware()` function which not only
-// runs the default `next()` callback but also triggers
-// the subsequent Middleware function.
-function nextFactory(context, middleware, index) {
-  const subsequentMiddleware = middleware[index];
-  // If no subsequent Middleware exists,
-  // the default `next()` callback is returned.
-  if (!subsequentMiddleware) return context.next;
-
-  return (...parameters) => {
-    // Run the default Vue Router `next()` callback first.
-    context.next(...parameters);
-    // Than run the subsequent Middleware with a new
-    // `nextMiddleware()` callback.
-    const nextMiddleware = nextFactory(context, middleware, index + 1);
-    subsequentMiddleware({ ...context, next: nextMiddleware });
-  };
-}
-
 router.beforeEach((to, from, next) => {
-  if (to.meta.middleware) {
-    const middleware = Array.isArray(to.meta.middleware)
-      ? to.meta.middleware
-      : [to.meta.middleware];
-
-    const context = {
-      from,
-      next,
-      router,
-      to,
-    };
-    const nextMiddleware = nextFactory(context, middleware, 1);
-
-    return middleware[0]({ ...context, next: nextMiddleware });
+  // PEGAR TOKEN NO LOCALSTORAGE
+  var token = localStorage.getItem('auth') && JSON.parse(localStorage.getItem('auth')).token ? JSON.parse(localStorage.getItem('auth')).token : false;
+  // SE FOR UMA ROTA COM AUTENTICÃO
+  if (to.matched.some(record => record.meta.requiresAuth)){
+    if(token){
+      return next()
+    }else{
+      return next('/login')
+    }
+  // SE FOR UMA ROTA RESTRITA PARA QUEM NÃO ESTIVER AUTENTICADO
+  }else if(to.matched.some(record => record.meta.requiresNotAuth)){
+    if(!token){
+      return next()
+    }else{
+      return next('/dashboard')
+    }
   }
-
-  return next();
-});
+})
 
 export default router;
