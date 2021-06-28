@@ -1,14 +1,11 @@
 <template>
     <site-template>
         <!-- FILTRO -->
-      <filter-meetings class="mb-4" :updateMeetings="updateMeetings"></filter-meetings>
+        <filter-meetings class="mb-4" :updateMeetings="updateMeetings"></filter-meetings>
         <!-- REUNIÕES -->
         <div class="container mt-4">
             <div v-for="meeting in meetings" :key="meeting.id">
                 <meeting :meeting="meeting" :auth="auth"></meeting>
-            </div>
-            <div v-if="!meetings.length">
-                <p>Nenhuma reunião encontrada</p>
             </div>
             <!-- AGENDA -->
             <schedule :meetings="meetings"></schedule>

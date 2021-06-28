@@ -10,9 +10,6 @@
       <div v-for="meeting in meetings" :key="meeting.id">
         <meeting :meeting="meeting" :auth="auth"></meeting>
       </div>
-      <div v-if="!meetings.length">
-        <p>Nenhuma reunião encontrada</p>
-      </div>
     </div>
     <!-- AGENDA -->
     <schedule :meetings="meetings"></schedule>

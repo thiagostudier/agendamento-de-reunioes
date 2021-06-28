@@ -11,7 +11,7 @@
                 <label class="label-checkboxs" for="future-meetings"><input type="checkbox" @change="filterMeetings()" v-model="filter.futureMeetings" id="future-meetings" /> Apenas reuniões futuras</label>
             </div>
         </div>
-        <form class="form" v-on:submit.prevent="filterMeetings()">
+        <form class="form mb-3" v-on:submit.prevent="filterMeetings()">
             <div class="row form-row">
                 <!-- NOME -->
                 <div class="form-group col-12 col-md">
@@ -41,6 +41,10 @@
                 <button class="btn btn-send btn-icon ml-auto d-block" @click="filterMeetings()"><i class="fa fa-search" aria-hidden="true"></i></button>
             </div>
         </form>
+
+        <p v-if="count > 0">{{count}} Resultado(s) encontrado(s)</p>
+        <p v-else>Nenhuma reunião encontrada</p>
+
     </div>
 </template>
 
@@ -69,6 +73,7 @@ export default {
                 filteringNewMeetings: null,
                 filteringMeetingsAccept: null,
             },
+            count: 0,
         }
     },
     props: {
@@ -99,7 +104,8 @@ export default {
                 }
             })
             .then(response => {
-                this.updateMeetings(response.data);
+                this.updateMeetings(response.data.data);
+                this.count = response.data.count;
                 localStorage.setItem('filtering', JSON.stringify(this.filter));
             })
             .catch(e => {

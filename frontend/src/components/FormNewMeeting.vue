@@ -29,7 +29,7 @@
                     <label for="date">Data da reunião</label>
                     <input type="date" class="form-control" id="date" v-model="newMeeting.date" />
                     <small v-if="errors.date" class="form-text text-muted">{{errors.date[0]}}</small>
-                    <small v-if="errors.week" class="form-text text-muted">{{errors.week[0]}}</small>
+                    <small v-else-if="errors.week" class="form-text text-muted">{{errors.week[0]}}</small>
                 </div>
                 <!-- INÍCIO -->
                 <div class="form-group col-12 col-sm" :class="{ 'form-group-add-error' : errors.start }">
@@ -104,12 +104,16 @@ export default {
             this.clearErrors(); 
             // MÉTODO AXIOS - CRIAR REUNIÃO
             api.post(`meetings`, 
-            {name: this.newMeeting.name, email: this.newMeeting.email, subject: this.newMeeting.subject, date: this.newMeeting.date, start: this.newMeeting.start, end: this.newMeeting.end})
+            {
+                name: this.newMeeting.name, 
+                email: this.newMeeting.email, 
+                subject: this.newMeeting.subject, 
+                date: this.newMeeting.date, 
+                start: this.newMeeting.start, 
+                end: this.newMeeting.end
+            })
             .then(response => {
-                // SE HOUVER ERRO NO CADASTRO
-                if(response.data.errors){
-                    this.errors = response.data.errors;
-                }else{
+                if(response.status == 201){
                     // NOTIFICAÇÃO
                     this.$notify({
                         closeOnClick: true,
@@ -126,9 +130,19 @@ export default {
                     this.newMeeting.date = null;
                     this.newMeeting.start = null;
                     this.newMeeting.end = null;
+                }else{
+                    // NOTIFICAÇÃO
+                    this.$notify({
+                        closeOnClick: true,
+                        type: 'error',
+                        text: 'Houve algum erro ao cadastrar a reunião!',
+                        position: 'top right'
+                    });
                 }
             })
             .catch(e => {
+                // PEGAR OS ERROS
+                this.errors = e.response.data.errors;
                 // NOTIFICAÇÃO
                 this.$notify({
                     closeOnClick: true,
@@ -142,14 +156,12 @@ export default {
             // LIMPAR ERROS
             this.clearErrors();
             // MÉTODO AXIOS - EDITAR REUNIÃO
-            api.put(`meetings/`+this.$route.params.id, 
+            api.patch(`meetings/`+this.$route.params.id, 
             {name: this.newMeeting.name, email: this.newMeeting.email, subject: this.newMeeting.subject, date: this.newMeeting.date, start: this.newMeeting.start, end: this.newMeeting.end},
             {headers: {"Authorization":"Bearer "+this.auth.token}})
             .then(response => {
-                // SE HOUVER ERRO NO CADASTRO
-                if(response.data.errors){
-                    this.errors = response.data.errors;
-                }else{
+                console.log(response);
+                if(response.status == 200){
                     // NOTIFICAÇÃO
                     this.$notify({
                         closeOnClick: true,
@@ -159,15 +171,24 @@ export default {
                     });
                     // RETORNAR PARA O DASHBOARD
                     this.$router.push('/dashboard');
+                }else{
+                    // NOTIFICAÇÃO
+                    this.$notify({
+                        closeOnClick: true,
+                        type: 'error',
+                        text: 'Houve algum erro ao atualizar a reunião!',
+                        position: 'top right'
+                    });
                 }
-                
             })
             .catch(e => {
+                // PEGAR OS ERROS
+                this.errors = e.response.data.errors;
                 // NOTIFICAÇÃO
                 this.$notify({
                     closeOnClick: true,
                     type: 'error',
-                    text: 'Houve algum erro ao cadastrar a reunião!',
+                    text: 'Houve algum erro ao atualizar a reunião!',
                     position: 'top right'
                 });
             });

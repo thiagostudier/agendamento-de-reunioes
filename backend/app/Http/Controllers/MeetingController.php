@@ -7,9 +7,10 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Meeting;
 use App\Http\Requests\MeetingRequest;
 use App\Notifications\NewMeetingNotification;
+use App\Http\Resources\MeetingCollection;
 
-class MeetingController extends Controller
-{
+class MeetingController extends Controller{
+
     //LISTAR REUNIÕES
     public function index(Request $request){
         // PEGAR AS REUNIÕES
@@ -27,8 +28,7 @@ class MeetingController extends Controller
         $filteringNewMeetings = isset($data['filteringNewMeetings']) && $data['filteringNewMeetings'] == "true" ? true : false;
         $futureMeetings = isset($data['futureMeetings']) && $data['futureMeetings'] == "true" ? true : false;
         // FILTRAR REUNIÕES
-        $meetings = Meeting::select('name','email','subject','date','start','end','status','new')
-        ->where('name', 'like', '%'.$name.'%')
+        $meetings = Meeting::where('name', 'like', '%'.$name.'%')
         ->where('email', 'like', '%'.$email.'%')
         ->where('subject', 'like', '%'.$subject.'%')
         ->where('date', 'like', '%'.$date.'%')
@@ -47,36 +47,20 @@ class MeetingController extends Controller
         })
         ->orderBy('date', 'asc')->orderBy('start', 'asc')->get();
 
-        return $meetings;
+        return new MeetingCollection($meetings);
+        
     }
 
     //PEGAR REUNIÃO
     public function show($id){
         // PEGAR REUNIÃO
-        $meetings = Meeting::findOrFail($id);
-        return $meetings;
+        return Meeting::findOrFail($id);
     }
     
     //CADASTRAR REUNIÃO
-    public function store(Request $request){
+    public function store(MeetingRequest $request){
         // PEGAR OS DADOS
         $data = $request->all();
-        // PEGAR DIA DA SEMANA
-        $data['week'] = date("D", strtotime($data['date']));
-        // VALIDAR CAMPOS
-        $validation = Validator::make($data, [
-            'name' => 'required|string|max:255|min:1',
-            'email' => 'required|email|string|max:255|min:1',
-            'subject' => 'required|string|max:255|min:1',
-            'date' => 'required|date|date_format:Y-m-d',
-            'start' => 'required|date_format:H:i|after_or_equal:08:00|before_or_equal:18:00',
-            'end' => 'required|date_format:H:i|after_or_equal:08:00|before_or_equal:18:00',
-            'week' => 'required|in:Mon,Tue,Wed,Thu,Fri',
-        ]);
-        // SE HOUVER ERROS, RETORNAR PARA O USUÁRIO
-        if($validation->fails()){
-            return ['errors' => $validation->errors()];
-        }
         // CADASTRAR REUNIÃO
         $meeting = Meeting::create([
             'name' => $data['name'],
@@ -103,7 +87,7 @@ class MeetingController extends Controller
     }
 
     //ATUALIZAR REUNIÃO
-    public function update(Request $request, $id){
+    public function update(MeetingRequest $request, $id){
         // PEGAR REUNIÃO
         $meeting = Meeting::findOrFail($id);
         // PEGAR OS DADOS
