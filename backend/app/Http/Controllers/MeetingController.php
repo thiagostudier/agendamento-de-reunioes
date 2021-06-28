@@ -12,7 +12,7 @@ use App\Http\Resources\MeetingCollection;
 class MeetingController extends Controller{
 
     //LISTAR REUNIÕES
-    public function index(Request $request){
+    public function get(Request $request){
         // PEGAR AS REUNIÕES
         $data = $request->all();
         // DADOS DA CONSULTA
