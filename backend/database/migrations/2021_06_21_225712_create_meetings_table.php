@@ -16,6 +16,8 @@ class CreateMeetingsTable extends Migration
             $table->date('date');
             $table->time('start');
             $table->time('end');
+            $table->boolean('new');
+            $table->boolean('status');
             $table->timestamps();
         });
     }
