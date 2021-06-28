@@ -9,6 +9,8 @@ use App\Http\Requests\MeetingRequest;
 use App\Notifications\NewMeetingNotification;
 use App\Http\Resources\MeetingCollection;
 
+use Carbon\Carbon;
+
 class MeetingController extends Controller{
 
     //LISTAR REUNIÕES
@@ -43,7 +45,7 @@ class MeetingController extends Controller{
         })->when($filteringNewMeetings, function ($query, $filteringNewMeetings) {
             return $query->where('new', true);
         })->when($futureMeetings, function ($query, $futureMeetings) {
-            return $query->where('date','>=',date("Y-m-d"));
+            return $query->where('date','>=',Carbon::now()->format('Y-m-d'));
         })
         ->orderBy('date', 'asc')->orderBy('start', 'asc')->get();
 
@@ -74,12 +76,14 @@ class MeetingController extends Controller{
         ]);
         // ENVIAR E-MAILS
         try {
+            $date = Carbon::parse($meeting->date)->format('d/m/Y');
+            $start = Carbon::parse($meeting->start)->format('H:i');
+            $end = Carbon::parse($meeting->end)->format('H:i');;
             // NOTIFICAR ADMIN
-            $message = "<p>Nova reunião aguardando sua aprovação.</p><p>Agendada por: ".$meeting->name."<br />Data: ".date("d/m/Y", strtotime($meeting->date))." ".date("H:i", strtotime($meeting->start))." até ".date("H:i", strtotime($meeting->end))."<br />Pauta da reunião: ".$meeting->subject."</p>";
+            $message = "<p>Nova reunião aguardando sua aprovação.</p><p>Agendada por: ".$meeting->name."<br />Data: ".$date." ".$start." até ".$end."<br />Pauta da reunião: ".$meeting->subject."</p>";
             \Notification::route('mail', 'thiago.studier9@gmail.com')->notify(new NewMeetingNotification($meeting->name, 'Piperun | Agendamento de reunião', $message));
             // NOTIFICAR USUÁRIO
-            $message = "<p>Olá, ".$meeting->name."<br />Sua reunião foi agendada, aguardando aprovação da gerência.</p><p>Data: ".date("d/m/Y", strtotime($meeting->date))." ".date("H:i", strtotime($meeting->start))." até ".date("H:i", strtotime($meeting->end))."<br />Pauta da reunião: ".$meeting->subject."</p>";
-            \Notification::route('mail', $meeting->email)->notify(new NewMeetingNotification($meeting->name, 'Piperun | Agendamento de reunião', $message));
+            $message = "<p>Olá, ".$meeting->name."<br />Sua reunião foi agendada, aguardando aprovação da gerência.</p><p>Data: ".$date." ".$start." até ".$end."<br />Pauta da reunião: ".$meeting->subject."</p>";
         } catch (\Throwable $th) {
         }
         // RETORNAR REUNIÃO NOVA
