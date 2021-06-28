@@ -25,12 +25,14 @@
 <script>
 
 import { api } from '@/services/api.ts';
+import store from '@/store';
 
 export default {
     name: 'Meeting',
-    props:['meeting', 'auth'],
+    props:['meeting'],
     data(){
         return{
+            auth: store.state.user || false,
             status: this.meeting.status,
             new_meeting: this.meeting.new
         }

@@ -9,7 +9,6 @@
 
 import 'fullcalendar/dist/fullcalendar.css'
 import { FullCalendar } from 'vue-full-calendar'
-import { api } from '@/services/api.ts';
 import store from '@/store';
 
 export default {

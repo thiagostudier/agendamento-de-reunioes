@@ -5,7 +5,7 @@
         <!-- REUNIÕES -->
         <div class="container mt-4">
             <div v-for="meeting in meetings" :key="meeting.id">
-                <meeting :meeting="meeting" :auth="auth"></meeting>
+                <meeting :meeting="meeting"></meeting>
             </div>
             <!-- AGENDA -->
             <schedule :meetings="meetings"></schedule>
@@ -19,7 +19,6 @@
     import Meeting from '@/components/Meeting';
     import Schedule from '@/components/Schedule';
     import SiteTemplate from '@/templates/SiteTemplate';
-    import store from '@/store';
 
     export default {
         name: 'Dashboard',
@@ -31,7 +30,6 @@
         },
         data(){
             return{
-                auth: store.state.user || false,
                 meetings: [],
             }
         },

@@ -8,7 +8,7 @@
     <!-- REUNIÕES -->
     <div class="container mb-4">
       <div v-for="meeting in meetings" :key="meeting.id">
-        <meeting :meeting="meeting" :auth="auth"></meeting>
+        <meeting :meeting="meeting"></meeting>
       </div>
     </div>
     <!-- AGENDA -->
@@ -23,7 +23,6 @@ import FormNewMeeting from '@/components/FormNewMeeting';
 import Schedule from '@/components/Schedule';
 import FilterMeetings from '@/components/FilterMeetings';
 import Meeting from '@/components/Meeting';
-import store from '@/store';
 
 export default {
   name: 'Home',
@@ -36,7 +35,6 @@ export default {
   },
   data(){
     return{
-      auth: store.state.user || false,
       meetings: [],
     }
   },
